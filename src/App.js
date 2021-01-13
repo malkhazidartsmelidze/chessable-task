@@ -1,7 +1,9 @@
 import React from 'react';
+import Bootstrap from 'Bootstrap';
+import { renderRoutes } from 'common/router';
 
 function App() {
-  return <div>It Works</div>;
+  return <Bootstrap>{renderRoutes()}</Bootstrap>;
 }
 
 export default App;

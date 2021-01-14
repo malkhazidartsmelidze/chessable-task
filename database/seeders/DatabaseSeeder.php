@@ -19,7 +19,12 @@ class DatabaseSeeder extends Seeder
             $this->command->line("Database cleared.");
         }
 
-        $this->call(UsersTableSeeder::class);
+        $this->call([
+            UsersTableSeeder::class,
+            CompanyTableSeeder::class,
+            DepartmentTableSeeder::class,
+            EmployeeTableSeeder::class,
+        ]);
 
         $this->command->info("Database seeded.");
     }

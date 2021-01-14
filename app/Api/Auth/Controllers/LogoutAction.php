@@ -2,20 +2,22 @@
 
 namespace App\Api\Auth\Controllers;
 
-use App\Models\UserToken;
+use App\Api\Auth\Repositories\UserTokenRepository;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 
 class LogoutAction
 {
     /**
      * Logout logged in user by token
-     *
+     * 
+     * @param UserTokenRepository $userTokenRepository
      * @return JsonResponse
      */
-    public function __invoke()
+    public function __invoke(UserTokenRepository $userTokenRepository)
     {
-        DB::delete('DELETE FROM ' . UserToken::TABLE . ' WHERE access_token = ?', [auth()->getTokenFromRequest()]);
+        $userTokenRepository->deleteByAccessToken(
+            auth()->getTokenFromRequest()
+        );
 
         return response()->json([
             'success' => true

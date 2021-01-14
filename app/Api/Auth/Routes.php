@@ -8,6 +8,6 @@ use App\Api\Auth\Controllers\BootstrapUserAction;
 Route::post('/login', LoginAction::class);
 
 Route::middleware('auth:token')->group(function () {
-    Route::get('/bootstrap', BootstrapUserAction::class);
-    Route::get('/logout', LogoutAction::class);
+    Route::post('/bootstrap', BootstrapUserAction::class);
+    Route::post('/logout', LogoutAction::class);
 });

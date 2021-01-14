@@ -9,22 +9,22 @@ import catchFieldErrors from 'common/errors/catchFieldErrors';
 
 const LoginPage = () => {
   const classes = useStyles();
-  const { login } = useUser();
+  const { userAuthenticated } = useUser();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
 
     setLoading(true);
-    setError(false);
+    setErrors({});
 
     UserService.login(data)
       .then((user) => {
-        login(user);
+        userAuthenticated(user);
       })
-      .catch((...data) => catchFieldErrors(setError, ...data))
+      .catch((...data) => catchFieldErrors(setErrors, ...data))
       .then(() => setLoading(false));
   };
 
@@ -41,7 +41,7 @@ const LoginPage = () => {
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             required
-            error={error}
+            err={errors.email}
             fullWidth
             label='Email Address'
             name='email'
@@ -54,7 +54,7 @@ const LoginPage = () => {
             name='password'
             label='Password'
             type='password'
-            error={error}
+            err={errors.password}
             autoComplete='current-password'
           />
           <Button

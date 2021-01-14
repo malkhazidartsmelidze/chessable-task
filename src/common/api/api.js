@@ -5,7 +5,7 @@ class Api {
   constructor() {
     /* Create new axios instance and use it everywhere in app */
     this.api = axios.create({
-      baseURL: 'https://localhost:8001/api/',
+      baseURL: 'http://localhost:8001/api/',
       timeout: 10000,
     });
 

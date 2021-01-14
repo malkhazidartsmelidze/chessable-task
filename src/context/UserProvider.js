@@ -54,6 +54,7 @@ export const UserContextProvider = ({ children }) => {
    */
   useEffect(() => {
     checkTokenAndLoginIfValid();
+    // eslint-disable-next-line
   }, []);
 
   return (

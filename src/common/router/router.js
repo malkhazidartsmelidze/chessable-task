@@ -5,17 +5,24 @@ import useUser from 'context/UserProvider';
 import { guestRedirect, userRedirect } from 'consts';
 import HomePage from 'pages/HomePage';
 import LoginPage from 'pages/LoginPage';
+import DashboardPage from 'pages/DashboardPage';
+import P from 'urls';
 
 const defaultRoutes = [
   {
-    path: '/',
+    path: P.HOME,
     exact: true,
     component: HomePage,
   },
   {
-    path: '/login',
+    path: P.LOGIN,
     guest: true,
     component: LoginPage,
+  },
+  {
+    path: P.DASHBOARD,
+    secured: true,
+    component: DashboardPage,
   },
 ];
 
@@ -24,7 +31,11 @@ export const renderRoutes = (routes = defaultRoutes, extraProps = {}, switchProp
     <Switch {...switchProps}>
       {routes.map((route, ind) => {
         const render = (props) => {
-          return <route.component {...props} {...extraProps} route={route} />;
+          if (route.render) {
+            return route.render({ ...props, ...extraProps, route: route });
+          } else if (route.component) {
+            return <route.component {...props} {...extraProps} route={route} />;
+          }
         };
 
         return (

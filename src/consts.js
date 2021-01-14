@@ -1,3 +1,6 @@
+import P from 'urls';
+
 export const tokenKey = 'chesstoken';
-export const userRedirect = '/dashboard';
-export const guestRedirect = '/login';
+export const userRedirect = P.DASHBOARD;
+export const guestRedirect = P.LOGIN;
+export const drawerWidth = 240;

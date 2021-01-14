@@ -33,6 +33,7 @@ const LoginPage = () => {
       <div className={classes.paper}>
         <img
           className={classes.logo}
+          alt='avatar'
           src='https://avatars3.githubusercontent.com/u/63467770?s=400&u=0305324cc94aa96af2dbed2106a05e8017573fe4&v=4'
         />
         <Typography component='h1' variant='h5'>

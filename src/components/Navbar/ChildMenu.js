@@ -1,6 +1,6 @@
 import React from 'react';
 import makeStyles from '@material-ui/styles/makeStyles';
-import MenuIcon from './MenuIcon';
+import MenuIcon from 'components/Navbar/MenuIcon';
 import { ListItem, ListItemText } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 

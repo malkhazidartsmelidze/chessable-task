@@ -1,12 +1,13 @@
 import React, { Suspense, useState } from 'react';
 import { LinearProgress, Hidden } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { drawerWidth } from 'consts';
 import clsx from 'clsx';
+
+import { drawerWidth } from 'consts';
 import { Topbar, Navbar } from './components';
+import { renderRoutes } from 'common/router';
 
 const DashboardLayout = (props) => {
-  const { children } = props;
   const classes = useStyles();
   const [navbarOpen, setNavbarOpen] = useState(false);
 
@@ -28,7 +29,9 @@ const DashboardLayout = (props) => {
         <Topbar onDrawerToggle={toggleNavbar} />
 
         <Suspense fallback={<LinearProgress />}>
-          <main className={clsx(classes.main, classes.mainBackground)}>{children}</main>
+          <main className={clsx(classes.main, classes.mainBackground)}>
+            {Array.isArray(props.route?.routes) ? renderRoutes(props.route.routes) : props.children}
+          </main>
         </Suspense>
       </div>
     </div>

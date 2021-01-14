@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { ListItem, ListItemText, Collapse, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import MenuIcon from './MenuIcon';
+import MenuIcon from 'components/Navbar/MenuIcon';
 
 const MenuItem = (props) => {
   const { description, showDivider, url, children, opened: defaultOpened } = props;

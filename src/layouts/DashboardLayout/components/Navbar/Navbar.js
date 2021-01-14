@@ -1,9 +1,12 @@
 import React from 'react';
 import { Drawer, List, ListItem } from '@material-ui/core';
 import clsx from 'clsx';
-import NavbarMenu from './components/NavbarMenu';
-import { drawerWidth } from 'consts';
 import { makeStyles } from '@material-ui/styles';
+
+import { drawerWidth } from 'consts';
+import MenuItem from 'components/Navbar/MenuItem';
+import ChildMenu from 'components/Navbar/ChildMenu';
+import P from 'urls';
 
 const Navbar = (props) => {
   const classes = useStyles();
@@ -17,7 +20,45 @@ const Navbar = (props) => {
         >
           HR System
         </ListItem>
-        <NavbarMenu />
+        <MenuItem
+          title='Dashboard'
+          leftIcon='import_contacts'
+          url={P.DASHBOARD}
+          showDivider={true}
+        />
+        <MenuItem
+          title='Companies'
+          leftIcon='business_center'
+          url={P.COMPANIES}
+          description='View Or Edit Your Companies'
+          showDivider={true}
+          opened={true}
+        >
+          <ChildMenu title='View All Company' leftIcon='view_list' url={P.ALL_COMPANY} />
+          <ChildMenu title='Create New Company' leftIcon='add_circle' url={P.CREATE_COMPANY} />
+        </MenuItem>
+        <MenuItem
+          title='Departaments'
+          leftIcon='pie_chart'
+          url={P.DEPARTAMENTS}
+          description='View, Edit, Create Departament'
+          showDivider={true}
+          opened={true}
+        >
+          <ChildMenu title='View All' leftIcon='view_list' url={P.ALL_DEPARTMENTS} />
+          <ChildMenu title='Create New Departament' leftIcon='post_add' url={P.CREATE_DEPARTMENT} />
+        </MenuItem>
+        <MenuItem
+          title='Employees'
+          leftIcon='group'
+          url={P.DEPARTAMENTS}
+          description='View, Edit or Create Employees'
+          showDivider={true}
+          opened={true}
+        >
+          <ChildMenu title='View All Epmloyee' leftIcon='view_list' url={P.ALL_EMPLOYEE} />
+          <ChildMenu title='Add New Employee' leftIcon='group_add' url={P.CREATE_EMPLOYEE} />
+        </MenuItem>
       </List>
     </Drawer>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { Redirect, Route as ReactRouter, Switch } from 'react-router-dom';
 
 import useUser from 'context/UserProvider';
@@ -23,6 +23,18 @@ const defaultRoutes = [
     path: P.DASHBOARD,
     secured: true,
     component: DashboardPage,
+    routes: [
+      {
+        path: P.ALL_DEPARTMENTS,
+        exact: true,
+        component: lazy(() => import('pages/Department/ListDepartmentPage')),
+      },
+      {
+        path: P.CREATE_DEPARTMENT,
+        exact: true,
+        component: lazy(() => import('pages/Department/CreateDepartmentPage')),
+      },
+    ],
   },
 ];
 

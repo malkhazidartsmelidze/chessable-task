@@ -102,9 +102,18 @@ const ResourceTable = (props) => {
       tableRef={tableRef}
       isLoading={loading}
       actions={[...createActions(), ...(props.actions || [])]}
-      data={props.data ? props.data : (query) => Service.list(query)}
+      data={
+        props.data
+          ? props.data
+          : (query) => {
+              console.log(query);
+              return Service.list(query);
+            }
+      }
       options={{
         actionsColumnIndex: -1,
+        pageSizeOptions: [2, 3, 5, 10],
+
         ...props.Options,
       }}
       {...rest}

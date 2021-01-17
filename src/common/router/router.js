@@ -40,6 +40,11 @@ const defaultRoutes = [
         exact: true,
         component: lazy(() => import('pages/Department/CreateDepartmentPage')),
       },
+      {
+        path: P.DEPARTMENT.edit(':id'),
+        exact: true,
+        component: lazy(() => import('pages/Department/EditDepartmentPage')),
+      },
       /* Company Routes */
       {
         path: P.COMPANY.list,

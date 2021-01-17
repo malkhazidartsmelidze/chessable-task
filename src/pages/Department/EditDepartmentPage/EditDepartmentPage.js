@@ -4,14 +4,17 @@ import { Grow } from '@material-ui/core';
 import P from 'urls';
 import DepartmentForm from '../components/DepartmentForm';
 
-const CreateDepartmentPage = () => {
+const CreateDepartmentPage = (props) => {
+  const id = props.match?.params?.id;
+
   return (
     <Grow in={true}>
       <DepartmentForm
-        title='Create Department'
+        title='Edit Department'
+        editing={true}
+        id={id}
         onCreate='show_list'
         resourceName='Department'
-        editing={false}
         urls={P.DEPARTMENT}
       />
     </Grow>

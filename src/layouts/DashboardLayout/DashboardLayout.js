@@ -6,6 +6,8 @@ import clsx from 'clsx';
 import { drawerWidth } from 'consts';
 import { Topbar, Navbar } from './components';
 import { renderRoutes } from 'common/router';
+import { AppContextProvider } from 'context/AppProvider';
+import Notifications from 'components/Notifications';
 
 const DashboardLayout = (props) => {
   const classes = useStyles();
@@ -16,25 +18,30 @@ const DashboardLayout = (props) => {
   };
 
   return (
-    <div className={classes.root}>
-      <nav className={classes.nav}>
-        <Hidden smUp implementation='js'>
-          <Navbar variant='temporary' open={navbarOpen} onClose={toggleNavbar} />
-        </Hidden>
-        <Hidden xsDown implementation='js'>
-          <Navbar />
-        </Hidden>
-      </nav>
-      <div className={classes.app}>
-        <Topbar onDrawerToggle={toggleNavbar} />
+    <AppContextProvider>
+      <div className={classes.root}>
+        <nav className={classes.nav}>
+          <Hidden smUp implementation='js'>
+            <Navbar variant='temporary' open={navbarOpen} onClose={toggleNavbar} />
+          </Hidden>
+          <Hidden xsDown implementation='js'>
+            <Navbar />
+          </Hidden>
+        </nav>
+        <div className={classes.app}>
+          <Topbar onDrawerToggle={toggleNavbar} />
 
-        <Suspense fallback={<LinearProgress />}>
-          <main className={clsx(classes.main, classes.mainBackground)}>
-            {Array.isArray(props.route?.routes) ? renderRoutes(props.route.routes) : props.children}
-          </main>
-        </Suspense>
+          <Suspense fallback={<LinearProgress />}>
+            <main className={clsx(classes.main, classes.mainBackground)}>
+              {Array.isArray(props.route?.routes)
+                ? renderRoutes(props.route.routes)
+                : props.children}
+            </main>
+          </Suspense>
+        </div>
       </div>
-    </div>
+      <Notifications />
+    </AppContextProvider>
   );
 };
 

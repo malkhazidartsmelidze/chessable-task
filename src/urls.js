@@ -3,17 +3,23 @@ const urls = {
   LOGIN: '/login',
   DASHBOARD: '/app/',
 
-  DEPARTAMENTS: '/app/departament',
-  ALL_DEPARTMENTS: '/app/departament/all',
-  CREATE_DEPARTMENT: '/app/departament/create',
+  DEPARTMENT: {
+    list: '/app/departament/all',
+    create: '/app/departament/create',
+    edit: (id) => `/app/departament/${id}/edit`,
+  },
 
-  COMPANIES: '/app/company',
-  ALL_COMPANY: '/app/company/all',
-  CREATE_COMPANY: '/app/company/create',
+  COMPANY: {
+    list: '/app/company/all',
+    create: '/app/company/create',
+    edit: (id) => `/app/company/${id}/edit`,
+  },
 
-  EMPLOYEES: '/app/employee',
-  ALL_EMPLOYEE: '/app/employee/all',
-  CREATE_EMPLOYEE: '/app/employee/create',
+  EMPLOYEE: {
+    list: '/app/employee/all',
+    create: '/app/employee/create',
+    edit: (id) => `/app/employee/${id}/edit`,
+  },
 };
 
 export default urls;

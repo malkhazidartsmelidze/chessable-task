@@ -3,10 +3,10 @@ import { Redirect, Route as ReactRouter, Switch } from 'react-router-dom';
 
 import useUser from 'context/UserProvider';
 import { guestRedirect, userRedirect } from 'consts';
+import P from 'urls';
 import HomePage from 'pages/HomePage';
 import LoginPage from 'pages/LoginPage';
-import DashboardPage from 'pages/DashboardPage';
-import P from 'urls';
+import DashboardLayout from 'layouts/DashboardLayout';
 
 const defaultRoutes = [
   {
@@ -22,17 +22,39 @@ const defaultRoutes = [
   {
     path: P.DASHBOARD,
     secured: true,
-    component: DashboardPage,
+    component: DashboardLayout,
     routes: [
       {
-        path: P.ALL_DEPARTMENTS,
+        path: P.DASHBOARD,
+        exact: true,
+        component: lazy(() => import('pages/DashboardPage')),
+      },
+      /* Department Routes */
+      {
+        path: P.DEPARTMENT.list,
         exact: true,
         component: lazy(() => import('pages/Department/ListDepartmentPage')),
       },
       {
-        path: P.CREATE_DEPARTMENT,
+        path: P.DEPARTMENT.create,
         exact: true,
         component: lazy(() => import('pages/Department/CreateDepartmentPage')),
+      },
+      /* Company Routes */
+      {
+        path: P.COMPANY.list,
+        exact: true,
+        component: lazy(() => import('pages/Company/ListCompanyPage')),
+      },
+      {
+        path: P.COMPANY.create,
+        exact: true,
+        component: lazy(() => import('pages/Company/CreateCompanyPage')),
+      },
+      {
+        path: P.COMPANY.edit(':id'),
+        exact: true,
+        component: lazy(() => import('pages/Company/CreateCompanyPage')),
       },
     ],
   },

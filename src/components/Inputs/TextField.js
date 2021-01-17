@@ -6,7 +6,7 @@ const TextField = (props) => {
     <MatTextField
       variant='outlined'
       size='small'
-      margin='normal'
+      margin='dense'
       {...props}
       error={Boolean(props.error || props.err)}
       helperText={props.err ? props.err : props.helperText}

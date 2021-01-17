@@ -29,35 +29,35 @@ const Navbar = (props) => {
         <MenuItem
           title='Companies'
           leftIcon='business_center'
-          url={P.COMPANIES}
+          url={P.COMPANY.list}
           description='View Or Edit Your Companies'
           showDivider={true}
           opened={true}
         >
-          <ChildMenu title='View All Company' leftIcon='view_list' url={P.ALL_COMPANY} />
-          <ChildMenu title='Create New Company' leftIcon='add_circle' url={P.CREATE_COMPANY} />
+          <ChildMenu title='View All Company' leftIcon='view_list' url={P.COMPANY.list} />
+          <ChildMenu title='Create New Company' leftIcon='add_circle' url={P.COMPANY.create} />
         </MenuItem>
         <MenuItem
           title='Departaments'
           leftIcon='pie_chart'
-          url={P.DEPARTAMENTS}
+          url={P.DEPARTMENT.list}
           description='View, Edit, Create Departament'
           showDivider={true}
           opened={true}
         >
-          <ChildMenu title='View All' leftIcon='view_list' url={P.ALL_DEPARTMENTS} />
-          <ChildMenu title='Create New Departament' leftIcon='post_add' url={P.CREATE_DEPARTMENT} />
+          <ChildMenu title='View All' leftIcon='view_list' url={P.DEPARTMENT.list} />
+          <ChildMenu title='Create New Departament' leftIcon='post_add' url={P.DEPARTMENT.create} />
         </MenuItem>
         <MenuItem
           title='Employees'
           leftIcon='group'
-          url={P.DEPARTAMENTS}
+          url={P.EMPLOYEE.list}
           description='View, Edit or Create Employees'
           showDivider={true}
           opened={true}
         >
-          <ChildMenu title='View All Epmloyee' leftIcon='view_list' url={P.ALL_EMPLOYEE} />
-          <ChildMenu title='Add New Employee' leftIcon='group_add' url={P.CREATE_EMPLOYEE} />
+          <ChildMenu title='View All Epmloyee' leftIcon='view_list' url={P.EMPLOYEE.list} />
+          <ChildMenu title='Add New Employee' leftIcon='group_add' url={P.EMPLOYEE.create} />
         </MenuItem>
       </List>
     </Drawer>

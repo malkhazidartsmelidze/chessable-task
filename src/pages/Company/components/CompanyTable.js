@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React from 'react';
 
 import CompanyService from 'services/CompanyService';
 import formatCurrency from 'common/formatters/formatCurrency';

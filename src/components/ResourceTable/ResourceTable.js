@@ -1,8 +1,6 @@
 import React, { useRef, useState } from 'react';
 import MaterialTable from 'material-table';
 
-import CompanyService from 'services/CompanyService';
-import formatCurrency from 'common/formatters/formatCurrency';
 import useApp from 'context/AppProvider';
 import { useHistory } from 'react-router';
 

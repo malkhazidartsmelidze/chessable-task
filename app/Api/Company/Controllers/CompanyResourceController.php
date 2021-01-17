@@ -15,11 +15,17 @@ use App\Response\NotificateUser;
 
 class CompanyResourceController
 {
+    /**
+     * Companies Table
+     * @var string
+     */
+    private $companies_table = Company::TABLE;
+    private $employees_table = Employee::TABLE;
+    private $departments_table = Department::TABLE;
+
     public function save(CreateCompanyRequest $request)
     {
-        $companies_table = Company::TABLE;
-
-        DB::insert("INSERT INTO $companies_table(
+        DB::insert("INSERT INTO {$this->companies_table}(
             user_id, name, code, address, phone_number, email
         ) VALUES (:user_id, :name, :code, :address, :phone_number, :email)", [
             'name'         => $request->getName(),
@@ -35,20 +41,45 @@ class CompanyResourceController
 
     public function udpate(UpdateCompanyRequest $request)
     {
-        return $request->all();
+        DB::update(
+            "UPDATE {$this->companies_table} 
+            SET user_id = :user_id,
+                name = :name,
+                code = :code,
+                address = :address,
+                phone_number = :phone_number,
+                email = :email
+            WHERE id = :id",
+            [
+                'id'           => $request->getId(),
+                'name'         => $request->getName(),
+                'code'         => $request->getCode(),
+                'address'      => $request->getAddress(),
+                'phone_number' => $request->getPhoneNumber(),
+                'email'        => $request->getEmail(),
+                'user_id'      => $request->user()->id
+            ]
+        );
+
+        return NotificateUser::create('Company Successfylly Updated');
     }
 
-    public function delete(DeleteCompanyRequest $request)
+    public function getSingle($id)
     {
-        return $request->all();
+        $company = DB::select("SELECT * FROM $this->companies_table WHERE id = ?", [$id]);
+
+        return (array) $company[0];
+    }
+
+    public function delete($id)
+    {
+        DB::delete("DELETE FROM $this->companies_table WHERE id = ?", [$id]);
+
+        return NotificateUser::create('Company Successfylly Deleted');
     }
 
     public function list()
     {
-        $companies_table = Company::TABLE;
-        $departments_table = Department::TABLE;
-        $employees_table = Employee::TABLE;
-
         $companies = DB::select("SELECT 
                 id,
                 name,
@@ -57,7 +88,7 @@ class CompanyResourceController
                 IFNULL(dep.count,0) AS dep_count,
                 IFNULL(dep.total_salary, 0) AS total_salary,
                 IFNULL(dep.total_employee, 0) AS total_employee
-            FROM `$companies_table`
+            FROM $this->companies_table
             
             # Get Total Departments With metadata
             LEFT JOIN (
@@ -66,7 +97,7 @@ class CompanyResourceController
                     SUM(emp.salary_sum) as total_salary,
                     SUM(emp.count) as total_employee,
                     company_id
-                FROM $departments_table 
+                FROM $this->departments_table 
                 
                 # Get Total employees and employee salary
                 LEFT JOIN (
@@ -74,18 +105,18 @@ class CompanyResourceController
                         count(*) as count,
                         sum(salary) as salary_sum,
                         department_id
-                    FROM $employees_table
+                    FROM $this->employees_table
                     GROUP BY department_id
-                ) emp ON emp.department_id = $departments_table.id
+                ) emp ON emp.department_id = $this->departments_table.id
 
                 GROUP BY company_id
-            ) dep ON dep.company_id = $companies_table.id
+            ) dep ON dep.company_id = {$this->companies_table}.id
         ");
 
         return response()->json([
             'data' => $companies,
             'page' => 1,
-            'totalCount' => 12,
+            'totalCount' => 122,
         ]);
     }
 }

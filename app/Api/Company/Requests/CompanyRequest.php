@@ -6,6 +6,24 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CompanyRequest extends FormRequest
 {
+    protected $validationRules = [
+        'name'         => ['required', 'max:80', 'string',],
+        'code'         => ['required', 'max:20', 'string'],
+        'address'      => ['required', 'max:80', 'string',],
+        'email'        => ['nullable', 'email', 'max:70'],
+        'phone_number' => ['nullable', 'string', 'max:20'],
+    ];
+
+    /**
+     * Get Company ID
+     *
+     * @return string|null
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * Get Company Name
      *
@@ -59,12 +77,6 @@ class CompanyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'         => ['required', 'max:80', 'string',],
-            'code'         => ['required', 'max:20', 'string'],
-            'address'      => ['required', 'max:80', 'string',],
-            'email'        => ['nullable', 'email', 'max:70'],
-            'phone_number' => ['required', 'string', 'max:20'],
-        ];
+        return $this->validationRules;
     }
 }

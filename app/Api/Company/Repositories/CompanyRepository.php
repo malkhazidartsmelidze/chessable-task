@@ -6,10 +6,13 @@ use App\Helpers\Repository;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Traits\HasSimpleCrudActions;
 use Illuminate\Support\Facades\DB;
 
 class CompanyRepository extends Repository
 {
+    use HasSimpleCrudActions;
+
     private $table = Company::TABLE;
     private $employees_table = Employee::TABLE;
     private $departments_table = Department::TABLE;

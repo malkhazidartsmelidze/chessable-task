@@ -54,7 +54,7 @@ const defaultRoutes = [
       {
         path: P.COMPANY.edit(':id'),
         exact: true,
-        component: lazy(() => import('pages/Company/CreateCompanyPage')),
+        component: lazy(() => import('pages/Company/EditCompanyPage')),
       },
     ],
   },

@@ -19,6 +19,24 @@ class CompanyService {
   }
 
   /**
+   * Edit Company
+   * @param {FormData|Object} data Company Form Data
+   * @return {Promise}
+   */
+  static edit(data) {
+    return api.call('post', '/company/update', data).then(api.getData);
+  }
+
+  /**
+   * Get Single Company
+   * @param {Number} id Company ID
+   * @return {Promise}
+   */
+  static get(id) {
+    return api.call('get', `/company/${id}`).then(api.getData);
+  }
+
+  /**
    * Delete Company
    * @param {Number} id Company ID
    * @return {Promise}

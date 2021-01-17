@@ -2,6 +2,7 @@
 
 namespace App\Api\Company\Controllers;
 
+use App\Api\Company\Repositories\CompanyRepository;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
@@ -15,19 +16,9 @@ use App\Response\NotificateUser;
 
 class CompanyResourceController
 {
-    /**
-     * Companies Table
-     * @var string
-     */
-    private $companies_table = Company::TABLE;
-    private $employees_table = Employee::TABLE;
-    private $departments_table = Department::TABLE;
-
-    public function save(CreateCompanyRequest $request)
+    public function save(CompanyRepository $companyRepository, CreateCompanyRequest $request)
     {
-        DB::insert("INSERT INTO {$this->companies_table}(
-            user_id, name, code, address, phone_number, email
-        ) VALUES (:user_id, :name, :code, :address, :phone_number, :email)", [
+        $companyRepository->create([
             'name'         => $request->getName(),
             'code'         => $request->getCode(),
             'address'      => $request->getAddress(),
@@ -39,84 +30,42 @@ class CompanyResourceController
         return NotificateUser::create('Company Successfylly Saved');
     }
 
-    public function udpate(UpdateCompanyRequest $request)
+    public function udpate(CompanyRepository $companyRepository, UpdateCompanyRequest $request)
     {
-        DB::update(
-            "UPDATE {$this->companies_table} 
-            SET user_id = :user_id,
-                name = :name,
-                code = :code,
-                address = :address,
-                phone_number = :phone_number,
-                email = :email
-            WHERE id = :id",
-            [
-                'id'           => $request->getId(),
-                'name'         => $request->getName(),
-                'code'         => $request->getCode(),
-                'address'      => $request->getAddress(),
-                'phone_number' => $request->getPhoneNumber(),
-                'email'        => $request->getEmail(),
-                'user_id'      => $request->user()->id
-            ]
-        );
+        $companyRepository->update($request->getId(), [
+            'name'         => $request->getName(),
+            'code'         => $request->getCode(),
+            'address'      => $request->getAddress(),
+            'phone_number' => $request->getPhoneNumber(),
+            'email'        => $request->getEmail(),
+            'user_id'      => $request->user()->id
+        ]);
 
         return NotificateUser::create('Company Successfylly Updated');
     }
 
-    public function getSingle($id)
+    public function getSingle(CompanyRepository $companyRepository, $id)
     {
-        $company = DB::select("SELECT * FROM $this->companies_table WHERE id = ?", [$id]);
+        $company = $companyRepository->selectOneById($id);
 
-        return (array) $company[0];
+        return (array) $company;
     }
 
-    public function delete($id)
+    public function delete(CompanyRepository $companyRepository, DeleteCompanyRequest $request, $id)
     {
-        DB::delete("DELETE FROM $this->companies_table WHERE id = ?", [$id]);
+        $companyRepository->delete($id);
 
         return NotificateUser::create('Company Successfylly Deleted');
     }
 
-    public function list()
+    public function list(CompanyRepository $companyRepository, Request $request)
     {
-        $companies = DB::select("SELECT 
-                id,
-                name,
-                code,
-                address,
-                IFNULL(dep.count,0) AS dep_count,
-                IFNULL(dep.total_salary, 0) AS total_salary,
-                IFNULL(dep.total_employee, 0) AS total_employee
-            FROM $this->companies_table
-            
-            # Get Total Departments With metadata
-            LEFT JOIN (
-                SELECT 
-                    count(*) as count,
-                    SUM(emp.salary_sum) as total_salary,
-                    SUM(emp.count) as total_employee,
-                    company_id
-                FROM $this->departments_table 
-                
-                # Get Total employees and employee salary
-                LEFT JOIN (
-                    SELECT 
-                        count(*) as count,
-                        sum(salary) as salary_sum,
-                        department_id
-                    FROM $this->employees_table
-                    GROUP BY department_id
-                ) emp ON emp.department_id = $this->departments_table.id
-
-                GROUP BY company_id
-            ) dep ON dep.company_id = {$this->companies_table}.id
-        ");
+        list($_, $_, $page) = $request->getPaginationData();
 
         return response()->json([
-            'data' => $companies,
-            'page' => 1,
-            'totalCount' => 122,
+            'data'       => $companyRepository->listUserCompaies($request->user()),
+            'page'       => $page,
+            'totalCount' => $companyRepository->getUserCompaniesCount($request->user()),
         ]);
     }
 }

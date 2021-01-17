@@ -6,9 +6,7 @@ class DeleteCompanyRequest extends CompanyRequest
 {
     public function rules()
     {
-        return [
-            'id' => ['required', 'numeric'],
-        ];
+        return [];
     }
 
     /**

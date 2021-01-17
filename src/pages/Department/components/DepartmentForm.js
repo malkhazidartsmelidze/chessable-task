@@ -19,11 +19,9 @@ const DepartmentForm = (props) => {
           name: 'company_id',
           label: 'Company',
           required: true,
-          options: {
-            autocomplete: true,
-            service: CompanyService,
-            column: 'name',
-          },
+          autocomplete: true,
+          column: 'name',
+          service: CompanyService,
         },
       ]}
       {...props}

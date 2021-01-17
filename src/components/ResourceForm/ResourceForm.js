@@ -1,8 +1,9 @@
 import React, { forwardRef, Fragment, useEffect, useState } from 'react';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, MenuItem } from '@material-ui/core';
 
 import FormContainer from 'components/Form/FormContainer';
 import TextField from 'components/Inputs/TextField';
+import AutoComplete from 'components/Inputs/AutoComplete';
 import useApp from 'context/AppProvider';
 import catchFieldErrors from 'common/errors/catchFieldErrors';
 import { useHistory } from 'react-router';
@@ -120,19 +121,25 @@ const ResourceForm = (props, ref) => {
           {data.id && editing ? <input type='hidden' name='id' value={data.id} /> : null}
 
           {(props.fields || []).map((field) => {
-            const { options, sizes, name, ...rest } = field;
+            const { options, sizes, name, autocomplete, service, ...rest } = field;
+            const Component = autocomplete ? AutoComplete : TextField;
 
             return (
               <Grid key={name} item {...(sizes || { xs: 12 })}>
-                <TextField
+                <Component
                   name={name}
                   err={errors[name]}
                   defaultValue={data[name]}
                   fullWidth
+                  service={service}
                   {...rest}
                 >
-                  {resolveOptions()}
-                </TextField>
+                  {(Array.isArray(options) || []).map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Component>
               </Grid>
             );
           })}

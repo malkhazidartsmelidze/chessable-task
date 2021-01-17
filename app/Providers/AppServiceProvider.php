@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Request::macro('getPaginationData', function () {
-            $perPage = is_numeric($this->perPage) ? (int) $this->perPage : 10;
+            $perPage = is_numeric($this->pageSize) ? (int) $this->pageSize : 10;
             $page = is_numeric($this->page) ? (int) $this->page : 0;
 
             $offset = $perPage * $page;

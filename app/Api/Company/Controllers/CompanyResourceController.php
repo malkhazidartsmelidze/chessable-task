@@ -48,6 +48,8 @@ class CompanyResourceController
     {
         $company = $companyRepository->selectOneById($id);
 
+        if (!$company) abort(404);
+
         return (array) $company;
     }
 
@@ -66,6 +68,15 @@ class CompanyResourceController
             'data'       => $companyRepository->listUserCompaies($request->user()),
             'page'       => $page,
             'totalCount' => $companyRepository->getUserCompaniesCount($request->user()),
+        ]);
+    }
+
+    public function autoComplete(CompanyRepository $companyRepository, Request $request)
+    {
+        $request->validate(['q' => 'nullable|string']);
+
+        return response()->json([
+            'data' => $companyRepository->autoComplete($request->q),
         ]);
     }
 }

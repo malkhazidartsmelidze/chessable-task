@@ -7,11 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class DepartmentRequest extends FormRequest
 {
     protected $validationRules = [
-        'name'         => ['required', 'max:80', 'string',],
-        'code'         => ['required', 'max:20', 'string'],
-        'address'      => ['required', 'max:80', 'string',],
-        'email'        => ['nullable', 'email', 'max:70'],
-        'phone_number' => ['nullable', 'string', 'max:20'],
+        'name'       => ['required', 'max:80', 'string',],
+        'company_id' => ['required', 'numeric'],
     ];
 
     /**
@@ -38,36 +35,9 @@ class DepartmentRequest extends FormRequest
      *
      * @return string|null
      */
-    public function getCode()
+    public function getCompanyId()
     {
-        return $this->code;
-    }
-    /**
-     * Get Department Address
-     *
-     * @return string|null
-     */
-    public function getAddress()
-    {
-        return $this->address;
-    }
-    /**
-     * Get Department Email
-     *
-     * @return string|null
-     */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-    /**
-     * Get Department Phone_number
-     *
-     * @return string|null
-     */
-    public function getPhoneNumber()
-    {
-        return $this->phone_number;
+        return $this->company_id;
     }
 
     /**

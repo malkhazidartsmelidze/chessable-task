@@ -6,12 +6,12 @@ use App\Helpers\Repository;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
-use App\Traits\HasSimpleCrudActions;
+use App\Traits\RepoHasSimpleCrudActions;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentRepository extends Repository
 {
-    use HasSimpleCrudActions;
+    use RepoHasSimpleCrudActions;
 
     private $table = Department::TABLE;
     private $companies_table = Company::TABLE;
@@ -48,9 +48,30 @@ class DepartmentRepository extends Repository
             WHERE comp.user_id = ? " .
             (request('company_id', null) ? ' AND comp.id = ' . (int) request('company_id') :  '')
             . "
+            ORDER BY dep.id
             LIMIT $limit
             OFFSET $offset
         ", [$user->id]);
+    }
+
+    /**
+     * Return Department Company
+     *
+     * @param object $department
+     * @return object|null
+     */
+    public function getCompany($department)
+    {
+        /* Joinint companies to departments because companies is smaller table than departments */
+        return DB::selectOne(
+            "SELECT 
+                comp.id, 
+                comp.name
+            FROM $this->companies_table comp
+            JOIN $this->table dep ON dep.company_id = comp.id
+            WHERE dep.id = ?",
+            [$department->id]
+        );
     }
 
     /**

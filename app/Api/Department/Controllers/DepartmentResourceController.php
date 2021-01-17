@@ -28,12 +28,8 @@ class DepartmentResourceController
     public function save(DepartmentRepository $departmentRepository, CreateDepartmentRequest $request)
     {
         $departmentRepository->create([
-            'name'         => $request->getName(),
-            'code'         => $request->getCode(),
-            'address'      => $request->getAddress(),
-            'phone_number' => $request->getPhoneNumber(),
-            'email'        => $request->getEmail(),
-            'user_id'      => $request->user()->id
+            'name'       => $request->getName(),
+            'company_id' => $request->getCompanyId(),
         ]);
 
         return NotificateUser::create('Department Successfylly Saved');
@@ -42,12 +38,8 @@ class DepartmentResourceController
     public function udpate(DepartmentRepository $departmentRepository, UpdateDepartmentRequest $request)
     {
         $departmentRepository->update($request->getId(), [
-            'name'         => $request->getName(),
-            'code'         => $request->getCode(),
-            'address'      => $request->getAddress(),
-            'phone_number' => $request->getPhoneNumber(),
-            'email'        => $request->getEmail(),
-            'user_id'      => $request->user()->id
+            'name'       => $request->getName(),
+            'company_id' => $request->getCompanyId(),
         ]);
 
         return NotificateUser::create('Department Successfylly Updated');
@@ -56,6 +48,10 @@ class DepartmentResourceController
     public function getSingle(DepartmentRepository $departmentRepository, $id)
     {
         $department = $departmentRepository->selectOneById($id);
+
+        if (!$department) abort(404);
+
+        $department->company_id = $departmentRepository->getCompany($department);
 
         return (array) $department;
     }

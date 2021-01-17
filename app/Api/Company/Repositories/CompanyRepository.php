@@ -6,12 +6,15 @@ use App\Helpers\Repository;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
-use App\Traits\HasSimpleCrudActions;
+use App\Traits\RepoHasAutoComplete;
+use App\Traits\RepoHasSimpleCrudActions;
 use Illuminate\Support\Facades\DB;
 
 class CompanyRepository extends Repository
 {
-    use HasSimpleCrudActions;
+    use RepoHasSimpleCrudActions, RepoHasAutoComplete;
+
+    private $autoCompleteColumn = 'name';
 
     private $table = Company::TABLE;
     private $employees_table = Employee::TABLE;
@@ -82,58 +85,5 @@ class CompanyRepository extends Repository
                 $user->id
             ]
         )->count ?? 0;
-    }
-
-    /**
-     * Delete Company 
-     *
-     * @param int $id
-     * @return void
-     */
-    public function delete($id)
-    {
-        DB::delete("DELETE FROM $this->table WHERE id = ?", [$id]);
-    }
-
-    /**
-     * Select Company By Id 
-     *
-     * @param int $id
-     * @return mixed
-     */
-    public function selectOneById($id)
-    {
-        $company = DB::selectOne("SELECT * FROM $this->table WHERE id = ?", [$id]);
-        return $company;
-    }
-
-    /**
-     * Update Company By Id
-     *
-     * @param int $id
-     * @param array $data
-     * @return mixed
-     */
-    public function update(int $id, array $data)
-    {
-        $setStatements = $this->getColumnsAndBindingsForUpdate(array_keys($data));
-
-        DB::update(
-            "UPDATE $this->table SET $setStatements WHERE id = :id",
-            ['id' => $id] + $data
-        );
-    }
-
-    /**
-     * Create Company
-     *
-     * @param array $data
-     * @return void
-     */
-    public function create(array $data)
-    {
-        $columnsAndBindings = $this->getColumnsAndBindingsForInsert(array_keys($data));
-
-        DB::insert("INSERT INTO {$this->table} $columnsAndBindings", array_values($data));
     }
 }

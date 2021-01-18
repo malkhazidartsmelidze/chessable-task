@@ -7,13 +7,7 @@ import EmployeeForm from '../components/EmployeeForm';
 const CreateEmployeePage = () => {
   return (
     <Grow in={true}>
-      <EmployeeForm
-        title='Create Employee'
-        onCreate='show_list'
-        resourceName='Employee'
-        editing={false}
-        urls={P.DEPARTMENT}
-      />
+      <EmployeeForm title='Create Employee' resourceName='Employee' editing={false} />
     </Grow>
   );
 };

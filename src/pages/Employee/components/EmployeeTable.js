@@ -23,7 +23,7 @@ const EmployeeTable = (props) => {
           title: 'Department Name',
           field: 'department_name',
         },
-        { title: 'Address', field: 'address', filtering: false },
+        { title: 'Address', field: 'address' },
         {
           title: 'Bank Account',
           field: 'bank_account',

@@ -16,18 +16,22 @@ const CompanyTable = (props) => {
       resourceName='Company'
       Service={CompanyService}
       columns={[
-        { title: 'ID', field: 'id' },
+        { title: 'ID', field: 'id', filtering: false },
         { title: 'Name', field: 'name' },
         { title: 'Address', field: 'address' },
         { title: 'Code', field: 'code' },
-        { title: 'Departaments', field: 'dep_count' },
-        { title: 'Total Employees', field: 'total_employee' },
+        { title: 'Departaments', field: 'dep_count', filtering: false },
+        { title: 'Total Employees', field: 'total_employee', filtering: false },
         {
           title: 'Salary Expense',
           field: 'total_salary',
+          filtering: false,
           render: (rowData) => formatCurrency(rowData.total_salary),
         },
       ]}
+      options={{
+        filtering: true,
+      }}
       {...props}
     />
   );

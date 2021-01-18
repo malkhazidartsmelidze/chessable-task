@@ -20,6 +20,12 @@ const DepartmentTable = (props) => {
         { title: 'Name', field: 'name' },
         { title: 'Total Employees', field: 'total_employee', filtering: false },
         {
+          title: 'Max Salary',
+          field: 'max_salary',
+          filtering: false,
+          render: (rowData) => formatCurrency(rowData.max_salary),
+        },
+        {
           title: 'Total Salary',
           field: 'total_salary',
           filtering: false,

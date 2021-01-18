@@ -1,5 +1,5 @@
 import React, { forwardRef, Fragment, useEffect, useState } from 'react';
-import { Button, Grid, MenuItem } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 
 import FormContainer from 'components/Form/FormContainer';
 import TextField from 'components/Inputs/TextField';

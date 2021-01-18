@@ -32,21 +32,9 @@ const Navbar = (props) => {
           url={P.COMPANY.list}
           description='View Or Edit Your Companies'
           showDivider={true}
-          opened={true}
         >
           <ChildMenu title='View All Company' leftIcon='view_list' url={P.COMPANY.list} />
           <ChildMenu title='Create New Company' leftIcon='add_circle' url={P.COMPANY.create} />
-        </MenuItem>
-        <MenuItem
-          title='Departaments'
-          leftIcon='pie_chart'
-          url={P.DEPARTMENT.list}
-          description='View, Edit, Create Departament'
-          showDivider={true}
-          opened={true}
-        >
-          <ChildMenu title='View All' leftIcon='view_list' url={P.DEPARTMENT.list} />
-          <ChildMenu title='Create New Departament' leftIcon='post_add' url={P.DEPARTMENT.create} />
         </MenuItem>
         <MenuItem
           title='Employees'
@@ -54,10 +42,19 @@ const Navbar = (props) => {
           url={P.EMPLOYEE.list}
           description='View, Edit or Create Employees'
           showDivider={true}
-          opened={true}
         >
           <ChildMenu title='View All Epmloyee' leftIcon='view_list' url={P.EMPLOYEE.list} />
           <ChildMenu title='Add New Employee' leftIcon='group_add' url={P.EMPLOYEE.create} />
+        </MenuItem>
+        <MenuItem
+          title='Departaments'
+          leftIcon='pie_chart'
+          url={P.DEPARTMENT.list}
+          description='View, Edit, Create Departament'
+          showDivider={true}
+        >
+          <ChildMenu title='View All' leftIcon='view_list' url={P.DEPARTMENT.list} />
+          <ChildMenu title='Create New Departament' leftIcon='post_add' url={P.DEPARTMENT.create} />
         </MenuItem>
       </List>
     </Drawer>

@@ -4,7 +4,6 @@ import { Redirect, Route as ReactRouter, Switch } from 'react-router-dom';
 import useUser from 'context/UserProvider';
 import { guestRedirect, userRedirect } from 'consts';
 import P from 'urls';
-import HomePage from 'pages/HomePage';
 import LoginPage from 'pages/LoginPage';
 import DashboardLayout from 'layouts/DashboardLayout';
 
@@ -12,7 +11,7 @@ const defaultRoutes = [
   {
     path: P.HOME,
     exact: true,
-    component: HomePage,
+    component: () => <Redirect to={P.LOGIN} />,
   },
   {
     path: P.LOGIN,

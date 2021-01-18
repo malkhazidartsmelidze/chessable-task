@@ -1,7 +1,6 @@
 import React from 'react';
 import { Grow } from '@material-ui/core';
 
-import P from 'urls';
 import EmployeeForm from '../components/EmployeeForm';
 
 const CreateEmployeePage = () => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import DepartmentService from 'services/DepartmentService';
 import formatCurrency from 'common/formatters/formatCurrency';
@@ -18,7 +19,16 @@ const DepartmentTable = (props) => {
       columns={[
         { title: 'ID', field: 'id', filtering: false },
         { title: 'Name', field: 'name' },
-        { title: 'Total Employees', field: 'total_employee', filtering: false },
+        {
+          title: 'Total Employees',
+          field: 'total_employee',
+          filtering: false,
+          render: (rowData) => (
+            <Link to={`${P.EMPLOYEE.list}?department_name=${rowData.name}`}>
+              {rowData.total_employee}
+            </Link>
+          ),
+        },
         {
           title: 'Max Salary',
           field: 'max_salary',

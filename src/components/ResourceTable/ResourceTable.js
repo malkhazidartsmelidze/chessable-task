@@ -113,7 +113,9 @@ const ResourceTable = (props) => {
       {...rest}
       options={{
         actionsColumnIndex: -1,
-        pageSizeOptions: [2, 3, 5, 10],
+        pageSizeOptions: [10, 25, 50, 100],
+        pageSize: 10,
+        search: false,
         ...props.options,
       }}
     />

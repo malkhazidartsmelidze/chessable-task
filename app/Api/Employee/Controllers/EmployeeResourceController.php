@@ -3,10 +3,7 @@
 namespace App\Api\Employee\Controllers;
 
 use App\Api\Employee\Repositories\EmployeeRepository;
-use App\Models\Employee;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Api\Employee\Requests\CreateEmployeeRequest;
 use App\Api\Employee\Requests\DeleteEmployeeRequest;
 use App\Api\Employee\Requests\UpdateEmployeeRequest;
@@ -29,7 +26,8 @@ class EmployeeResourceController
     {
         $employeeRepository->create([
             'name'          => $request->getName(),
-            'department_id' => $request->getDepartmentDd(),
+            'department_id' => $request->getDepartmentId(),
+            'company_id'    => $request->getCompanyId(),
             'lastname'      => $request->getLastname(),
             'bank_account'  => $request->getBankAccount(),
             'address'       => $request->getAddress(),
@@ -43,7 +41,8 @@ class EmployeeResourceController
     {
         $employeeRepository->update($request->getId(), [
             'name'          => $request->getName(),
-            'department_id' => $request->getDepartmentDd(),
+            'department_id' => $request->getDepartmentId(),
+            'company_id'    => $request->getCompanyId(),
             'lastname'      => $request->getLastname(),
             'bank_account'  => $request->getBankAccount(),
             'address'       => $request->getAddress(),
@@ -60,6 +59,7 @@ class EmployeeResourceController
         if (!$employee) abort(404);
 
         $employee->department_id = $employeeRepository->getDepartment($employee);
+        $employee->company_id = $employeeRepository->getCompany($employee);
 
         return (array) $employee;
     }

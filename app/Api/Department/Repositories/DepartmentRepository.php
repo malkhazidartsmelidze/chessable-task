@@ -38,9 +38,9 @@ class DepartmentRepository extends Repository
             LEFT JOIN (
                 SELECT 
                     count(*) as count,
-                    sum(salary) as salary_sum,
-                    department_id
-                FROM $this->employees_table
+                    sum(emp.salary) as salary_sum,
+                    emp.department_id
+                FROM $this->employees_table emp
                 JOIN $this->companies_table comp ON comp.id = emp.company_id
                 WHERE user_id = :user_id
                 GROUP BY department_id

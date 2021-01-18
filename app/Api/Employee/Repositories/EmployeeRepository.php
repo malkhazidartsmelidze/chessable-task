@@ -39,9 +39,9 @@ class EmployeeRepository extends Repository
                 comp.name as company_name
             FROM $this->table emp
             JOIN $this->departments_table dep ON dep.id = emp.department_id
-            JOIN $this->companies_table comp ON comp.id = dep.company_id
+            JOIN $this->companies_table comp ON comp.id = emp.company_id
             WHERE 1 AND comp.user_id = ? " . $this->filterEmployees() . "
-            ORDER BY dep.id
+            ORDER BY emp.id
             LIMIT $limit
             OFFSET $offset
         ", [$user->id]);
@@ -54,7 +54,7 @@ class EmployeeRepository extends Repository
     }
 
     /**
-     * Return Employee Company
+     * Return Employee Department
      *
      * @param object $employee
      * @return object|null
@@ -67,7 +67,26 @@ class EmployeeRepository extends Repository
                 dep.name
             FROM $this->departments_table dep
             JOIN $this->table emp ON dep.id = emp.department_id
-            WHERE dep.id = ?",
+            WHERE emp.id = ?",
+            [$employee->id]
+        );
+    }
+
+    /**
+     * Return Employee Company
+     *
+     * @param object $employee
+     * @return object|null
+     */
+    public function getCompany($employee)
+    {
+        return DB::selectOne(
+            "SELECT 
+                comp.id, 
+                comp.name
+            FROM $this->companies_table comp
+            JOIN $this->table emp ON comp.id = emp.company_id
+            WHERE emp.id = ?",
             [$employee->id]
         );
     }
@@ -85,7 +104,7 @@ class EmployeeRepository extends Repository
             count(*) as count
             FROM $this->table emp
             JOIN $this->departments_table dep ON dep.id = emp.department_id
-            JOIN $this->companies_table comp ON comp.id = dep.company_id
+            JOIN $this->companies_table comp ON comp.id = emp.company_id
             WHERE 1 AND comp.user_id = ?",
             [$user->id]
         )->count ?? 0;

@@ -17,9 +17,7 @@ class DepartmentTableSeeder extends Seeder
     public function run()
     {
         $departments_table = Department::TABLE;
-        $companies_table = Company::TABLE;
 
-        $companies = DB::select("SELECT id FROM `$companies_table`");
         $departments = [
             'Production',
             'Research and Development',
@@ -30,16 +28,13 @@ class DepartmentTableSeeder extends Seeder
             'Accounting and Finance.',
         ];
 
-        foreach ($companies as $company) {
-            foreach ($departments as $department_name) {
-                DB::insert("INSERT INTO 
-                    `$departments_table`(company_id, name)
-                    VALUES(:company_id, :name)
+        foreach ($departments as $department_name) {
+            DB::insert("INSERT INTO 
+                    `$departments_table`(name)
+                    VALUES(:name)
                 ", [
-                    'company_id' => $company->id,
-                    'name' => $department_name
-                ]);
-            }
+                'name' => $department_name
+            ]);
         }
     }
 }

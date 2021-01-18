@@ -8,7 +8,6 @@ class DepartmentRequest extends FormRequest
 {
     protected $validationRules = [
         'name'       => ['required', 'max:80', 'string',],
-        'company_id' => ['required', 'numeric'],
     ];
 
     /**
@@ -29,15 +28,6 @@ class DepartmentRequest extends FormRequest
     public function getName()
     {
         return $this->name;
-    }
-    /**
-     * Get Department Code
-     *
-     * @return string|null
-     */
-    public function getCompanyId()
-    {
-        return $this->company_id;
     }
 
     /**

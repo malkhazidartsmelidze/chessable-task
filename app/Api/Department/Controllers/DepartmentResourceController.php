@@ -21,7 +21,7 @@ class DepartmentResourceController
         return response()->json([
             'data'       => $departmentRepository->listUserDepartments($request->user()),
             'page'       => $page,
-            'totalCount' => $departmentRepository->getUserDepartmentsCount($request->user()),
+            'totalCount' => $departmentRepository->getDepartmentsCount(),
         ]);
     }
 
@@ -29,7 +29,6 @@ class DepartmentResourceController
     {
         $departmentRepository->create([
             'name'       => $request->getName(),
-            'company_id' => $request->getCompanyId(),
         ]);
 
         return NotificateUser::create('Department Successfylly Saved');
@@ -39,7 +38,6 @@ class DepartmentResourceController
     {
         $departmentRepository->update($request->getId(), [
             'name'       => $request->getName(),
-            'company_id' => $request->getCompanyId(),
         ]);
 
         return NotificateUser::create('Department Successfylly Updated');
@@ -50,8 +48,6 @@ class DepartmentResourceController
         $department = $departmentRepository->selectOneById($id);
 
         if (!$department) abort(404);
-
-        $department->company_id = $departmentRepository->getCompany($department);
 
         return (array) $department;
     }
@@ -68,7 +64,7 @@ class DepartmentResourceController
         $request->validate(['q' => 'nullable|string']);
 
         return response()->json([
-            'data' => $departmentRepository->autoComplete($request),
+            'data' => $departmentRepository->autoComplete($request->q),
         ]);
     }
 }

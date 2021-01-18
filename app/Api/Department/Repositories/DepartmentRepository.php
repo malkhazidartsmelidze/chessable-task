@@ -31,11 +31,9 @@ class DepartmentRepository extends Repository
         return DB::select("SELECT 
                 dep.id,
                 dep.name,
-                comp.name as company_name,
                 IFNULL(emp.salary_sum, 0) AS total_salary,
                 IFNULL(emp.count, 0) AS total_employee
             FROM $this->table dep
-            JOIN $this->companies_table comp ON comp.id = dep.company_id
 
             LEFT JOIN (
                 SELECT 
@@ -43,71 +41,28 @@ class DepartmentRepository extends Repository
                     sum(salary) as salary_sum,
                     department_id
                 FROM $this->employees_table
+                JOIN $this->companies_table comp ON comp.id = emp.company_id
+                WHERE user_id = :user_id
                 GROUP BY department_id
             ) emp ON emp.department_id = dep.id
-            
-            WHERE comp.user_id = ? " .
-            (request('company_id', null) ? ' AND comp.id = ' . (int) request('company_id') :  '')
-            . "
+
             ORDER BY dep.id
             LIMIT $limit
             OFFSET $offset
-        ", [$user->id]);
+        ", ['user_id' => $user->id]);
     }
 
     /**
-     * Return Department Company
+     * Get how much Departments Exists
      *
-     * @param object $department
-     * @return object|null
-     */
-    public function getCompany($department)
-    {
-        /* Joinint companies to departments because companies is smaller table than departments */
-        return DB::selectOne(
-            "SELECT 
-                comp.id, 
-                comp.name
-            FROM $this->companies_table comp
-            JOIN $this->table dep ON dep.company_id = comp.id
-            WHERE dep.id = ?",
-            [$department->id]
-        );
-    }
-
-    /**
-     * Get how much companines user has 
-     *
-     * @param App\Models\User|object $user
      * @return int
      */
-    public function getUserDepartmentsCount($user): int
+    public function getDepartmentsCount(): int
     {
         return DB::selectOne(
             "SELECT 
-            count(*) as count 
-        FROM $this->table dep
-        JOIN $this->companies_table comp ON comp.id = dep.company_id
-        WHERE comp.user_id = ? " . (request('company_id', null) ? ' AND comp.id = ' . (int) request('company_id') :  ''),
-            [$user->id]
+                count(*) as count 
+            FROM $this->table dep"
         )->count ?? 0;
-    }
-
-
-    /**
-     * Return autocomplete for Company
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return void
-     */
-    public function autoComplete($request): array
-    {
-        return DB::select("SELECT 
-            dep.id, 
-            CONCAT(dep.$this->autoCompleteColumn, ' - ', comp.name) as name
-        FROM {$this->table} dep
-        JOIN $this->companies_table comp ON comp.id = dep.company_id
-        WHERE dep.$this->autoCompleteColumn " . ($request->company_id ? ' AND company_id = ' . $request->company_id : '') . "
-        LIKE ? LIMIT 5", ["%$request->q%"]);
     }
 }

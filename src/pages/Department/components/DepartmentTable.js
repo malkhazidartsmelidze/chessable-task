@@ -16,16 +16,19 @@ const DepartmentTable = (props) => {
       resourceName='Department'
       Service={DepartmentService}
       columns={[
-        { title: 'ID', field: 'id' },
+        { title: 'ID', field: 'id', filtering: false },
         { title: 'Name', field: 'name' },
-        { title: 'Company Name', field: 'company_name' },
-        { title: 'Total Employees', field: 'total_employee' },
+        { title: 'Total Employees', field: 'total_employee', filtering: false },
         {
           title: 'Total Salary',
           field: 'total_salary',
+          filtering: false,
           render: (rowData) => formatCurrency(rowData.total_salary),
         },
       ]}
+      options={{
+        filtering: true,
+      }}
       {...props}
     />
   );

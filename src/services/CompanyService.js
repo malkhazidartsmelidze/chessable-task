@@ -8,10 +8,8 @@ class CompanyService extends SimpleCrudService {
     });
   }
 
-  autoComplete = (q) => {
-    return api
-      .call('get', `${this.resourceName}/autocomplete`, { params: { q } })
-      .then(api.getData);
+  autoComplete = (formData) => {
+    return api.call('post', `${this.resourceName}/autocomplete`, formData).then(api.getData);
   };
 }
 

@@ -110,13 +110,12 @@ const ResourceTable = (props) => {
               return Service.list(query);
             }
       }
+      {...rest}
       options={{
         actionsColumnIndex: -1,
         pageSizeOptions: [2, 3, 5, 10],
-
-        ...props.Options,
+        ...props.options,
       }}
-      {...rest}
     />
   );
 };

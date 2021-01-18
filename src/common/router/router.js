@@ -61,6 +61,22 @@ const defaultRoutes = [
         exact: true,
         component: lazy(() => import('pages/Company/EditCompanyPage')),
       },
+      /* Employee Routes */
+      {
+        path: P.EMPLOYEE.list,
+        exact: true,
+        component: lazy(() => import('pages/Employee/ListEmployeePage')),
+      },
+      {
+        path: P.EMPLOYEE.create,
+        exact: true,
+        component: lazy(() => import('pages/Employee/CreateEmployeePage')),
+      },
+      {
+        path: P.EMPLOYEE.edit(':id'),
+        exact: true,
+        component: lazy(() => import('pages/Employee/EditEmployeePage')),
+      },
     ],
   },
 ];

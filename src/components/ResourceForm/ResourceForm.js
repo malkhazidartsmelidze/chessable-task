@@ -8,8 +8,6 @@ import useApp from 'context/AppProvider';
 import catchFieldErrors from 'common/errors/catchFieldErrors';
 import { useHistory } from 'react-router';
 
-const resolveOptions = () => null;
-
 const ResourceForm = (props, ref) => {
   const { catchApiSuccess, notificate } = useApp();
   const [loading, setLoading] = useState(false);
@@ -42,6 +40,7 @@ const ResourceForm = (props, ref) => {
   const onFormSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    setErrors({});
 
     const formData = new FormData(e.target);
     let method = () => Promise(() => {});
@@ -123,6 +122,10 @@ const ResourceForm = (props, ref) => {
           {(props.fields || []).map((field) => {
             const { options, sizes, name, autocomplete, service, ...rest } = field;
             const Component = autocomplete ? AutoComplete : TextField;
+
+            if (rest.type === 'hidden') {
+              return <input type='hidden' name={name} value={data[name]} />;
+            }
 
             return (
               <Grid key={name} item {...(sizes || { xs: 12 })}>

@@ -109,7 +109,7 @@ const ResourceTable = (props) => {
   const listRequest = (query) => {
     const filters = filterFormRef ? formToJSON(filterFormRef) : {};
 
-    return Service.list({ query, ...filters });
+    return Service.list({ ...query, ...filters });
   };
 
   return (

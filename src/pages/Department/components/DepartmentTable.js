@@ -23,9 +23,9 @@ const DepartmentTable = (props) => {
               List Only Those departments which has employees with minimum salary
             </Typography>
             <Grid container alignItems='center'>
-              <TextField name='min_employees' label='Min. employees' defaultValue='2' />
+              <TextField name='min_employees' label='Min. employees' defaultValue='' />
               <Typography variant='body2'>Has</Typography>
-              <TextField name='min_salary' label='Min. Salary' defaultValue='50000' />
+              <TextField name='min_salary' label='Min. Salary' defaultValue='' />
             </Grid>
             <Divider />
             <Button type='submit' variant='contained' color='primary'>

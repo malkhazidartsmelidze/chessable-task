@@ -29,43 +29,61 @@ class CompanyRepository extends Repository
     public function listUserCompaies($user)
     {
         list($offset, $limit) = request()->getPaginationData();
+        list($filters, $bindings) = $this->createFilters();
 
         return DB::select("SELECT 
                 id,
                 name,
                 code,
                 address,
-                IFNULL(dep.count,0) AS dep_count,
-                IFNULL(dep.total_salary, 0) AS total_salary,
-                IFNULL(dep.total_employee, 0) AS total_employee
-            FROM $this->table
+                IFNULL(emp.dep_count,0) AS dep_count,
+                IFNULL(emp.total_salary, 0) AS total_salary,
+                IFNULL(emp.total_employee, 0) AS total_employee
+            FROM $this->table comp
             
-            # Get Total Departments With metadata
+            # Get Employees metadata
             LEFT JOIN (
                 SELECT 
-                    count(*) as count,
-                    SUM(emp.salary_sum) as total_salary,
-                    SUM(emp.count) as total_employee,
+                    count(*) as total_employee,
+                    count(DISTINCT department_id) as dep_count,
+                    sum(salary) as total_salary,
                     company_id
-                FROM $this->departments_table 
-                
-                # Get Total employees and employee salary
-                LEFT JOIN (
-                    SELECT 
-                        count(*) as count,
-                        sum(salary) as salary_sum,
-                        department_id
-                    FROM $this->employees_table
-                    GROUP BY department_id
-                ) emp ON emp.department_id = $this->departments_table.id
-
+                FROM $this->employees_table
                 GROUP BY company_id
-            ) dep ON dep.company_id = {$this->table}.id
+            ) emp ON emp.company_id = comp.id
             
-            WHERE user_id = ?
+            WHERE user_id = :user_id $filters
             LIMIT $limit
             OFFSET $offset
-        ", [$user->id]);
+        ", ['user_id' => $user->id] + $bindings);
+    }
+
+    /**
+     * Create Filters
+     *
+     * @return array
+     */
+    private function createFilters()
+    {
+        $filters = "";
+        $requestedFilters = request()->getSimplifiedRequestFilters();
+
+        if (isset($requestedFilters['name'])) {
+            $filters .= " AND comp.name LIKE :name";
+            $requestedFilters['name'] = "%$requestedFilters[name]%";
+        }
+
+        if (isset($requestedFilters['code'])) {
+            $filters .= " AND comp.code LIKE :code";
+            $requestedFilters['code'] = "%$requestedFilters[code]%";
+        }
+
+        if (isset($requestedFilters['address'])) {
+            $filters .= " AND comp.address LIKE :address";
+            $requestedFilters['address'] = "%$requestedFilters[address]%";
+        }
+
+        return [$filters, $requestedFilters];
     }
 
     /**
@@ -76,14 +94,15 @@ class CompanyRepository extends Repository
      */
     public function getUserCompaniesCount($user): int
     {
+        list($filters, $bindings) = $this->createFilters();
+
         return DB::selectOne(
             "SELECT 
-            count(*) as count 
-        FROM $this->table 
-        WHERE user_id = ?",
-            [
-                $user->id
-            ]
+                count(*) as count 
+            FROM $this->table comp
+            WHERE user_id = :user_id $filters
+        ",
+            ['user_id' => $user->id] + $bindings
         )->count ?? 0;
     }
 }

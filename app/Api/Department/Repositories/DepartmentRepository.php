@@ -66,7 +66,7 @@ class DepartmentRepository extends Repository
         $requestedFilters = request()->getSimplifiedRequestFilters();
 
         if (isset($requestedFilters['name'])) {
-            $filters .= "AND $table.name LIKE :name";
+            $filters .= " AND $table.name LIKE :name";
             $requestedFilters['name'] = "%$requestedFilters[name]%";
         }
 

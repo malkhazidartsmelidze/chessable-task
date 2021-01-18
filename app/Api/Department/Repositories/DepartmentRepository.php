@@ -27,17 +27,20 @@ class DepartmentRepository extends Repository
     public function listUserDepartments($user)
     {
         list($offset, $limit) = request()->getPaginationData();
+        list($filters, $bindings) = $this->createFilters('dep');
 
         return DB::select("SELECT 
                 dep.id,
                 dep.name,
                 IFNULL(emp.salary_sum, 0) AS total_salary,
-                IFNULL(emp.count, 0) AS total_employee
+                IFNULL(emp.count, 0) AS total_employee,
+                IFNULL(emp.max_salary, 0) AS max_salary
             FROM $this->table dep
 
             LEFT JOIN (
                 SELECT 
                     count(*) as count,
+                    max(emp.salary) as max_salary,
                     sum(emp.salary) as salary_sum,
                     emp.department_id
                 FROM $this->employees_table emp
@@ -45,11 +48,29 @@ class DepartmentRepository extends Repository
                 WHERE user_id = :user_id
                 GROUP BY department_id
             ) emp ON emp.department_id = dep.id
-
+            WHERE 1 " . $filters . "
             ORDER BY dep.id
             LIMIT $limit
             OFFSET $offset
-        ", ['user_id' => $user->id]);
+        ", ['user_id' => $user->id] + $bindings);
+    }
+
+    /**
+     * Create Filters
+     *
+     * @return array
+     */
+    private function createFilters($table)
+    {
+        $filters = "";
+        $requestedFilters = request()->getSimplifiedRequestFilters();
+
+        if (isset($requestedFilters['name'])) {
+            $filters .= "AND $table.name LIKE :name";
+            $requestedFilters['name'] = "%$requestedFilters[name]%";
+        }
+
+        return [$filters, $requestedFilters];
     }
 
     /**
@@ -59,10 +80,13 @@ class DepartmentRepository extends Repository
      */
     public function getDepartmentsCount(): int
     {
+        list($filters, $bindings) = $this->createFilters('dep');
+
         return DB::selectOne(
             "SELECT 
                 count(*) as count 
-            FROM $this->table dep"
+            FROM $this->table dep WHERE 1 $filters",
+            $bindings
         )->count ?? 0;
     }
 }

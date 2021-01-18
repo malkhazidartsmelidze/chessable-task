@@ -26,6 +26,7 @@ class EmployeeRepository extends Repository
     public function listUserEmployees($user)
     {
         list($offset, $limit) = request()->getPaginationData();
+        list($filters, $bindings) = $this->createFilters('emp');
 
         return DB::select("SELECT 
                 emp.id,
@@ -40,18 +41,51 @@ class EmployeeRepository extends Repository
             FROM $this->table emp
             JOIN $this->departments_table dep ON dep.id = emp.department_id
             JOIN $this->companies_table comp ON comp.id = emp.company_id
-            WHERE 1 AND comp.user_id = ? " . $this->filterEmployees() . "
+            WHERE 1 AND comp.user_id = :user_id $filters
             ORDER BY emp.id
             LIMIT $limit
             OFFSET $offset
-        ", [$user->id]);
+        ", ['user_id' => $user->id] + $bindings);
     }
 
-    public function filterEmployees()
+    /**
+     * Create Filters
+     *
+     * @return array
+     */
+    private function createFilters()
     {
-        $filter = '';
-        return $filter;
+        $filters = "";
+        $requestedFilters = request()->getSimplifiedRequestFilters();
+
+        if (isset($requestedFilters['name'])) {
+            $filters .= "AND emp.name LIKE :name";
+            $requestedFilters['name'] = "%$requestedFilters[name]%";
+        }
+
+        if (isset($requestedFilters['lastname'])) {
+            $filters .= "AND emp.lastname LIKE :lastname";
+            $requestedFilters['lastname'] = "%$requestedFilters[lastname]%";
+        }
+
+        if (isset($requestedFilters['address'])) {
+            $filters .= "AND emp.address LIKE :address";
+            $requestedFilters['address'] = "%$requestedFilters[address]%";
+        }
+
+        if (isset($requestedFilters['department_name'])) {
+            $filters .= "AND dep.name LIKE :department_name";
+            $requestedFilters['department_name'] = "%$requestedFilters[department_name]%";
+        }
+
+        if (isset($requestedFilters['company_name'])) {
+            $filters .= "AND comp.name LIKE :company_name";
+            $requestedFilters['company_name'] = "%$requestedFilters[company_name]%";
+        }
+
+        return [$filters, $requestedFilters];
     }
+
 
     /**
      * Return Employee Department
@@ -99,14 +133,16 @@ class EmployeeRepository extends Repository
      */
     public function getUserEmployeesCount($user): int
     {
+        list($filters, $bindings) = $this->createFilters('emp');
+
         return DB::selectOne(
             "SELECT 
             count(*) as count
             FROM $this->table emp
             JOIN $this->departments_table dep ON dep.id = emp.department_id
             JOIN $this->companies_table comp ON comp.id = emp.company_id
-            WHERE 1 AND comp.user_id = ?",
-            [$user->id]
+            WHERE 1 AND comp.user_id = :user_id $filters",
+            ['user_id' => $user->id] + $bindings
         )->count ?? 0;
     }
 }

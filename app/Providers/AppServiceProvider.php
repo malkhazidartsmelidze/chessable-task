@@ -28,6 +28,20 @@ class AppServiceProvider extends ServiceProvider
 
             return [$offset, $limit, $page];
         });
+
+        Request::macro('getSimplifiedRequestFilters', function ($aviableFields = null) {
+            if (!is_array($this->filters)) return [];
+            $filters = [];
+
+            foreach ($this->filters as $filter) {
+                if (isset($filter['column']) && isset($filter['value']) && isset($filter['column']['field'])) {
+                    if ($aviableFields && !in_array($filter['column']['field'], $aviableFields)) continue;
+                    $filters[$filter['column']['field']] = $filter['value'];
+                }
+            }
+
+            return $filters;
+        });
     }
 
     /**

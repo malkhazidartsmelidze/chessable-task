@@ -56,10 +56,19 @@ class DepartmentResourceController
         return (array) $department;
     }
 
-    public function delete(DepartmentRepository $departmentRepository, DeleteDepartmentRequest $request, $id)
+    public function delete(DepartmentRepository $departmentRepository, DeleteDepartmentRequest $_, $id)
     {
         $departmentRepository->delete($id);
 
         return NotificateUser::create('Department Successfylly Deleted');
+    }
+
+    public function autoComplete(DepartmentRepository $departmentRepository, Request $request)
+    {
+        $request->validate(['q' => 'nullable|string']);
+
+        return response()->json([
+            'data' => $departmentRepository->autoComplete($request),
+        ]);
     }
 }

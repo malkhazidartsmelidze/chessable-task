@@ -6,12 +6,13 @@ use App\Helpers\Repository;
 use App\Models\Company;
 use App\Models\Department;
 use App\Models\Employee;
+use App\Traits\RepoHasAutoComplete;
 use App\Traits\RepoHasSimpleCrudActions;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentRepository extends Repository
 {
-    use RepoHasSimpleCrudActions;
+    use RepoHasSimpleCrudActions, RepoHasAutoComplete;
 
     private $table = Department::TABLE;
     private $companies_table = Company::TABLE;
@@ -90,5 +91,23 @@ class DepartmentRepository extends Repository
         WHERE comp.user_id = ? " . (request('company_id', null) ? ' AND comp.id = ' . (int) request('company_id') :  ''),
             [$user->id]
         )->count ?? 0;
+    }
+
+
+    /**
+     * Return autocomplete for Company
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function autoComplete($request): array
+    {
+        return DB::select("SELECT 
+            dep.id, 
+            CONCAT(dep.$this->autoCompleteColumn, ' - ', comp.name) as name
+        FROM {$this->table} dep
+        JOIN $this->companies_table comp ON comp.id = dep.company_id
+        WHERE dep.$this->autoCompleteColumn " . ($request->company_id ? ' AND company_id = ' . $request->company_id : '') . "
+        LIKE ? LIMIT 5", ["%$request->q%"]);
     }
 }

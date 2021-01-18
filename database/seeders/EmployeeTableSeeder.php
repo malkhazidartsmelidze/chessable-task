@@ -39,7 +39,7 @@ class EmployeeTableSeeder extends Seeder
                         'lastname'      => $faker->lastname,
                         'address'       => $faker->address,
                         'bank_account'  => Str::random(25),
-                        'salary'        => round(rand(20000, 70000), -3),
+                        'salary'        => round(rand(20000, 55000), -3),
                     ]);
                 }
             }

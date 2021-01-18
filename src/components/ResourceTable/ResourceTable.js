@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import MaterialTable from 'material-table';
 
 import useApp from 'context/AppProvider';
 import { useHistory } from 'react-router';
+import formToJSON from 'common/formToJson';
 
 const ResourceTable = (props) => {
   const tableRef = useRef();
-  const { Service, resourceName, ...rest } = props;
+  const { Service, resourceName, filterFormRef, ...rest } = props;
   const history = useHistory();
   const { catchApiSuccess } = useApp();
   const [loading, setLoading] = useState(false);
@@ -97,19 +98,26 @@ const ResourceTable = (props) => {
     return actions;
   };
 
+  useEffect(() => {
+    if (!filterFormRef) return;
+    filterFormRef.addEventListener('submit', (e) => {
+      e.preventDefault();
+      refreshTable();
+    });
+  }, [filterFormRef]);
+
+  const listRequest = (query) => {
+    const filters = filterFormRef ? formToJSON(filterFormRef) : {};
+
+    return Service.list({ query, ...filters });
+  };
+
   return (
     <MaterialTable
       tableRef={tableRef}
       isLoading={loading}
       actions={[...createActions(), ...(props.actions || [])]}
-      data={
-        props.data
-          ? props.data
-          : (query) => {
-              console.log(query);
-              return Service.list(query);
-            }
-      }
+      data={props.data ? props.data : listRequest}
       {...rest}
       options={{
         actionsColumnIndex: -1,

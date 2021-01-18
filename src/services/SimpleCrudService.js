@@ -8,7 +8,8 @@ class SimpleCrudService {
    * List All Resource
    * @return {Promise}
    */
-  list = (query) => {
+  list = (query, filterData) => {
+    query.formData = filterData;
     return api.call('post', `/${this.resourceName}/list`, query).then(api.getData);
   };
 

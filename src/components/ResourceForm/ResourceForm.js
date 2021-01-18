@@ -120,7 +120,7 @@ const ResourceForm = (props, ref) => {
           {data.id && editing ? <input type='hidden' name='id' value={data.id} /> : null}
 
           {(props.fields || []).map((field) => {
-            const { options, sizes, name, autocomplete, service, ...rest } = field;
+            const { sizes, name, autocomplete, service, ...rest } = field;
             const Component = autocomplete ? AutoComplete : TextField;
 
             if (rest.type === 'hidden') {
@@ -136,13 +136,7 @@ const ResourceForm = (props, ref) => {
                   fullWidth
                   service={service}
                   {...rest}
-                >
-                  {(Array.isArray(options) || []).map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Component>
+                ></Component>
               </Grid>
             );
           })}
